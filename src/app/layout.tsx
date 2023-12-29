@@ -8,13 +8,11 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Xahau Reward Claim',
   description: 'Claim rewards from Xahau Network and check the estimated amount of rewards.',
-  metadataBase: new URL(process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://claim-reward.tequ.dev'),
   openGraph: {
     type: 'website',
     url: 'https://claim-reward.tequ.dev',
     title: 'Xahau Reward Claim',
     description: 'Claim rewards from Xahau Network and check the estimated amount of rewards.',
-    images: '/ogp.png',
   },
   twitter: {
     card: 'summary_large_image',
