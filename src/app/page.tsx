@@ -41,7 +41,7 @@ export default function Home() {
           </div>
           <Suspense fallback={<CircularProgress aria-label="Loading..." />}>
             <ClaimReward account={user.account} txBtn={
-              <Button color="primary" size='lg' onClick={handleClaimReward}>Claim Reward</Button>
+            (label: string) => <Button color="primary" size='lg' onClick={handleClaimReward}>{label}</Button>
             } />
           </Suspense>
         </>

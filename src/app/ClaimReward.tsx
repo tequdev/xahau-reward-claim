@@ -3,7 +3,7 @@ import { ReactNode, use } from "react";
 
 type Props = {
   account: string
-  txBtn: ReactNode
+  txBtn: (label: string) => ReactNode
 }
 
 const rewardRateHuman = (rewardRate: number) => {
@@ -31,6 +31,7 @@ export const ClaimReward = async ({ account, txBtn }: Props) => {
 
   const remaining_sec = rewardDelay - (ledger.close_time - RewardTime)
 
+  const uninitialized = accountRoot?.RewardLgrFirst === undefined
   const claimable = remaining_sec <= 0
 
   const now = new Date()
@@ -63,16 +64,18 @@ export const ClaimReward = async ({ account, txBtn }: Props) => {
       </div>
 
       <div className="mt-4">
-
-        {claimable &&
+        {uninitialized &&
+          <div className="text-center">{txBtn('Registration')}</div>
+        }
+        {claimable && !uninitialized &&
           <div>
-            <div className="text-center">{txBtn}</div>
+            <div className="text-center">{txBtn('Claim Reward')}</div>
             <div className="text-center mt-4">
               Estimated Rewards:<br /><span className="text-xl">{reward.toFixed(4)}XAH</span>
             </div>
           </div>
         }
-        {!claimable &&
+        {!claimable && !uninitialized &&
           <div>
             <div className="text-center">
               Claimable in <br /><span className="text-xl">{claimableDate.toLocaleString()}</span>
