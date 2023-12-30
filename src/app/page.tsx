@@ -19,6 +19,7 @@ export default function Home() {
             Issuer: 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh' // Genesis Account
           },
           options: {
+            expire: 15,
             force_network: config['xaman-network'],
           }
         })
