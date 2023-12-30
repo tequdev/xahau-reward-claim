@@ -11,16 +11,20 @@ export default function Home() {
   )
 
   const handleClaimReward = async () => {
-    await signTransaction(
-      {
-        txjson: {
-          TransactionType: 'ClaimReward',
-          Issuer: 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh' // Genesis Account
-        },
-        options: {
-          force_network: config['xaman-network'],
-        }
-      })
+    try {
+      await signTransaction(
+        {
+          txjson: {
+            TransactionType: 'ClaimReward',
+            Issuer: 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh' // Genesis Account
+          },
+          options: {
+            force_network: config['xaman-network'],
+          }
+        })
+    } catch (e) {
+      alert("An error was detected. Please try again later.")
+    }
   }
 
   return (

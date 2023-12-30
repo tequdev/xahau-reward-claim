@@ -1,5 +1,5 @@
 import { fetchAccountRoot, fetchCurrentLedger, fetchRewardDelay, fetchRewardRate } from "@/lib/xahau";
-import { ReactNode, use } from "react";
+import { ReactNode } from "react";
 
 type Props = {
   account: string
