@@ -2,17 +2,16 @@
 import useXumm from '@tequ/use-xumm-hook'
 import { Button, CircularProgress } from '@nextui-org/react'
 import { ClaimReward } from './ClaimReward'
-import { Suspense } from 'react'
 import config from '@/config'
 
 export default function Home() {
-  const { status, connect, disconnect, user, signTransaction } = useXumm(
+  const { status, connect, disconnect, user, signTransaction, xumm } = useXumm(
     process.env.NEXT_PUBLIC_XUMM_APIKEY!, process.env.XUMM_SECRET!
   )
 
   const handleClaimReward = async () => {
     try {
-      await signTransaction(
+      const payload = await signTransaction(
         {
           txjson: {
             TransactionType: 'ClaimReward',
@@ -23,9 +22,11 @@ export default function Home() {
             force_network: config['xaman-network'],
           }
         })
+      return payload?.response?.txid || null
     } catch (e) {
       alert("An error was detected. Please try again later.")
     }
+    return null
   }
 
   return (
@@ -44,11 +45,7 @@ export default function Home() {
             <div className="text-lg">{user.account.substring(0, 15)}...</div>
             <Button className='' color="success" onClick={disconnect}>Disconnect</Button>
           </div>
-          <Suspense fallback={<CircularProgress aria-label="Loading..." />}>
-            <ClaimReward account={user.account} txBtn={
-            (label: string) => <Button color="primary" size='lg' onClick={handleClaimReward}>{label}</Button>
-            } />
-          </Suspense>
+          <ClaimReward account={user.account} onTransaction={handleClaimReward} />
         </>
       }
     </main>

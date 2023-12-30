@@ -9,8 +9,8 @@ dependencies:
     specifier: ^2.2.9
     version: 2.2.9(@types/react@18.2.46)(framer-motion@10.16.16)(react-dom@18.2.0)(react@18.2.0)(tailwind-variants@0.1.19)(tailwindcss@3.4.0)
   '@tequ/use-xumm-hook':
-    specifier: ^0.1.5
-    version: 0.1.5(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^0.2.0
+    version: 0.2.0(react-dom@18.2.0)(react@18.2.0)
   '@transia/xrpl':
     specifier: 2.7.3-alpha.22
     version: 2.7.3-alpha.22
@@ -29,6 +29,9 @@ dependencies:
   react-dom:
     specifier: ^18
     version: 18.2.0(react@18.2.0)
+  swr:
+    specifier: ^2.2.4
+    version: 2.2.4(react@18.2.0)
   xumm:
     specifier: ^1.7.6
     version: 1.7.6
@@ -2574,8 +2577,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@tequ/use-xumm-hook@0.1.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-ouKVxqAP0zjGAUZfdh8Oqw6wGznc3rKmJ/O3GnXbbWpJIyIaksHDKiVRGoQu275w1d4SfBT3F5GcuLpMX28USQ==}
+  /@tequ/use-xumm-hook@0.2.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-3IXBACgoavVW53a4ousHN9qB/AhfriDv40o64xcYh/vxDJGfqMEFRxxzmuPaqryRmavxuT5/xLTLwFaJ7sUGEg==}
     peerDependencies:
       react: ^18.2.0
       react-dom: ^18.2.0
@@ -5356,6 +5359,16 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
+  /swr@2.2.4(react@18.2.0):
+    resolution: {integrity: sha512-njiZ/4RiIhoOlAaLYDqwz5qH/KZXVilRLvomrx83HjzCWTfa+InyfAjv05PSFxnmLzZkNO9ZfvgoqzAaEI4sGQ==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      client-only: 0.0.1
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
   /tailwind-merge@1.14.0:
     resolution: {integrity: sha512-3mFKyCo/MBcgyOTlrY8T7odzZFx+w+qKSMAmdFzRvqBfLlSigU6TZnlFHK0lkMwj9Bj8OYU+9yW9lmGuS0QEnQ==}
     dev: false
@@ -5634,6 +5647,14 @@ packages:
       detect-node-es: 1.1.0
       react: 18.2.0
       tslib: 2.6.2
+    dev: false
+
+  /use-sync-external-store@1.2.0(react@18.2.0):
+    resolution: {integrity: sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /utf-8-validate@5.0.10:

@@ -10,13 +10,14 @@
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.9",
-    "@tequ/use-xumm-hook": "^0.1.5",
+    "@tequ/use-xumm-hook": "^0.2.0",
     "@transia/xrpl": "2.7.3-alpha.22",
     "daisyui": "^4.4.24",
     "framer-motion": "^10.16.16",
     "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
+    "swr": "^2.2.4",
     "xumm": "^1.7.6"
   },
   "devDependencies": {

@@ -1,9 +1,12 @@
+'use client'
+import useSWRImmutable from 'swr/immutable'
 import { fetchAccountRoot, fetchCurrentLedger, fetchRewardDelay, fetchRewardRate } from "@/lib/xahau";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { Button, CircularProgress } from '@nextui-org/react';
 
 type Props = {
   account: string
-  txBtn: (label: string) => ReactNode
+  onTransaction: () => Promise<string | null>
 }
 
 const rewardRateHuman = (rewardRate: number) => {
@@ -18,11 +21,28 @@ const rewardDelayHuman = (rewardDelay: number) => {
   return Math.ceil(rewardDelay / (3600 * 24)) + ' days'
 }
 
-export const ClaimReward = async ({ account, txBtn }: Props) => {
+const fetch = async (account: string) => {
   const accountRoot = await fetchAccountRoot(account) as any
   const ledger = await fetchCurrentLedger()
   const rewardRate = await fetchRewardRate()
   const rewardDelay = await fetchRewardDelay()
+  return {
+    accountRoot,
+    ledger,
+    rewardRate,
+    rewardDelay,
+  }
+}
+
+export const ClaimReward = ({ account, onTransaction }: Props) => {
+  const { data: _data, mutate } = useSWRImmutable(account, fetch)
+  const [data, setData] = useState(_data)
+
+  useEffect(() => setData(_data), [_data])
+
+  if (!data) return <CircularProgress aria-label="Loading..." />
+
+  const { accountRoot, ledger, rewardRate, rewardDelay } = data
 
   const RewardLgrFirst = accountRoot?.RewardLgrFirst || 0
   const RewardLgrLast = accountRoot?.RewardLgrLast || 0
@@ -37,6 +57,15 @@ export const ClaimReward = async ({ account, txBtn }: Props) => {
   const now = new Date()
   const claimableDate = new Date(now.getTime() + remaining_sec * 1000)
 
+  if (remaining_sec > 0) {
+    let id: NodeJS.Timeout
+    id = setTimeout(async () => {
+      setData(undefined)
+      mutate()
+      clearTimeout(id)
+    }, remaining_sec + 3 * 1000)
+  }
+
   // calculate reward
   const cur = ledger.ledger_index as unknown as number
   const elapsed = cur - RewardLgrFirst
@@ -46,6 +75,15 @@ export const ClaimReward = async ({ account, txBtn }: Props) => {
     accumulator += parseFloat(accountRoot.Balance) / 1000000 * elapsed_since_last
   }
   const reward = accumulator / elapsed * rewardRate
+
+  const handleTransaction = async () => {
+    const result = await onTransaction()
+    if (result) {
+      setData(undefined)
+      await new Promise<void>((resolve) => setTimeout(() => resolve(), 4000))
+      mutate()
+    }
+  }
 
   return (
     <div>
@@ -65,11 +103,15 @@ export const ClaimReward = async ({ account, txBtn }: Props) => {
 
       <div className="mt-4">
         {uninitialized &&
-          <div className="text-center">{txBtn('Registration')}</div>
+          <div className="text-center">
+            <Button color="primary" size='lg' onClick={handleTransaction}>Registration</Button>
+          </div>
         }
         {claimable && !uninitialized &&
           <div>
-            <div className="text-center">{txBtn('Claim Reward')}</div>
+            <div className="text-center">
+              <Button color="primary" size='lg' onClick={handleTransaction}>Claim Reward</Button>
+            </div>
             <div className="text-center mt-4">
               Estimated Rewards:<br /><span className="text-xl">{reward.toFixed(4)}XAH</span>
             </div>
