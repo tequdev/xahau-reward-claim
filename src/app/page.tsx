@@ -13,11 +13,24 @@ export default function Home() {
   const [config, setConfig] = useState(defaultConfig)
   const [client,setClient] = useState(new Client(config['wss']))
 
+  if (xumm.runtime.xapp) {
+    (xumm.environment.ott)?.then(data => {
+      const nodetype = data?.nodetype
+      if(nodetype?.toLowerCase().includes('test') && config['xaman-network'] !=='xahau-testnet') {
+        setConfig(configs['xahau-testnet'])
+        setClient(new Client(configs['xahau-testnet']['wss']))
+      }
+    })
+  }
+
   useEffect(() => {
     const handler = (data: { network?: string }) => {
       if (data.network?.toLowerCase().includes('test')) {
         setConfig(configs['xahau-testnet'])
         setClient(new Client(configs['xahau-testnet']['wss']))
+      } else {
+        setConfig(defaultConfig)
+        setClient(new Client(defaultConfig['wss']))
       }
     }
     xumm.xapp?.on('networkswitch', handler)
