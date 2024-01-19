@@ -3,6 +3,7 @@ import useXumm from '@tequ/use-xumm-hook'
 import { Button, CircularProgress } from '@nextui-org/react'
 import { ClaimReward } from './ClaimReward'
 import config from '@/config'
+import { Client } from '@transia/xrpl'
 
 export default function Home() {
   const { status, connect, disconnect, user, signTransaction, xumm } = useXumm(
@@ -15,14 +16,31 @@ export default function Home() {
         {
           txjson: {
             TransactionType: 'ClaimReward',
-            Issuer: 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh' // Genesis Account
+            Issuer: 'rHb9CJAWyB4rj91VRWn96DkukG4bwdtyTh', // Genesis Account
+            NetworkID: config['networkId'],
           },
           options: {
             expire: 15,
             force_network: config['xaman-network'],
           }
         })
-      return payload?.response?.txid || null
+      if (!payload?.response.txid) return null
+      const txid = payload.response.txid
+      if (!txid) return null
+      const nodeuri = payload.response.environment_nodeuri!
+      const client = new Client(nodeuri)
+      await client.connect()
+      let validated = false
+      do {
+        const response = await client.request({
+          command: 'tx',
+          transaction: txid,
+        })
+        validated = response.result.validated || false
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      } while (!validated)
+      await client.disconnect()
+      return txid
     } catch (e) {
       alert("An error was detected. Please try again later.")
     }

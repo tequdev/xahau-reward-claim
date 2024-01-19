@@ -57,15 +57,6 @@ export const ClaimReward = ({ account, onTransaction }: Props) => {
   const now = new Date()
   const claimableDate = new Date(now.getTime() + remaining_sec * 1000)
 
-  if (remaining_sec > 0) {
-    let id: NodeJS.Timeout
-    id = setTimeout(async () => {
-      setData(undefined)
-      mutate()
-      clearTimeout(id)
-    }, remaining_sec + 3 * 1000)
-  }
-
   // calculate reward
   const cur = ledger.ledger_index as unknown as number
   const elapsed = cur - RewardLgrFirst
@@ -80,7 +71,6 @@ export const ClaimReward = ({ account, onTransaction }: Props) => {
     const result = await onTransaction()
     if (result) {
       setData(undefined)
-      await new Promise<void>((resolve) => setTimeout(() => resolve(), 4000))
       mutate()
     }
   }

@@ -1,11 +1,13 @@
 const configs = {
   'xahau-mainnet': {
     'xaman-network': 'xahau',
-    wss: 'wss://xahau.org'
+    wss: 'wss://xahau.org',
+    networkId: 21337
   },
   'xahau-testnet': {
     'xaman-network': 'xahau-testnet',
-    wss: 'wss://xahau-test.net'
+    wss: 'wss://xahau-test.net',
+    networkId: 21338
   }
 }
 
