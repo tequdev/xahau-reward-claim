@@ -1,10 +1,7 @@
 import { Client } from "@transia/xrpl"
 import { hookStateXLFtoBigNumber } from "./xfl"
-import config from "@/config"
 
-const client = new Client(config.wss)
-
-export const fetchAccountRoot = async (address: string) => {
+export const fetchAccountRoot = async (client:Client, address: string) => {
   await client.connect()
   const response = await client.request({
     command: 'account_info',
@@ -14,7 +11,7 @@ export const fetchAccountRoot = async (address: string) => {
   return response.result.account_data
 }
 
-export const fetchCurrentLedger = async () => {
+export const fetchCurrentLedger = async (client: Client,) => {
   await client.connect()
   const response = await client.request({
     command: 'ledger',
@@ -23,7 +20,7 @@ export const fetchCurrentLedger = async () => {
   return response.result.ledger
 }
 
-export const fetchRewardRate = async () => {
+export const fetchRewardRate = async (client: Client,) => {
   await client.connect()
   const response = await client.request({
     command: 'ledger_entry',
@@ -37,7 +34,7 @@ export const fetchRewardRate = async () => {
   return hookStateXLFtoBigNumber(response.result.node['HookStateData'])
 }
 
-export const fetchRewardDelay = async () => {
+export const fetchRewardDelay = async (client: Client,) => {
   await client.connect()
   const response = await client.request({
     command: 'ledger_entry',

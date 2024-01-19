@@ -3,8 +3,10 @@ import useSWRImmutable from 'swr/immutable'
 import { fetchAccountRoot, fetchCurrentLedger, fetchRewardDelay, fetchRewardRate } from "@/lib/xahau";
 import { ReactNode, useEffect, useState } from "react";
 import { Button, CircularProgress } from '@nextui-org/react';
+import { Client } from '@transia/xrpl';
 
 type Props = {
+  client: Client
   account: string
   onTransaction: () => Promise<string | null>
 }
@@ -21,11 +23,11 @@ const rewardDelayHuman = (rewardDelay: number) => {
   return Math.ceil(rewardDelay / (3600 * 24)) + ' days'
 }
 
-const fetch = async (account: string) => {
-  const accountRoot = await fetchAccountRoot(account) as any
-  const ledger = await fetchCurrentLedger()
-  const rewardRate = await fetchRewardRate()
-  const rewardDelay = await fetchRewardDelay()
+const fetch = async ({ client, account }:{ client: Client, account: string }) => {
+  const accountRoot = await fetchAccountRoot(client,account) as any
+  const ledger = await fetchCurrentLedger(client)
+  const rewardRate = await fetchRewardRate(client)
+  const rewardDelay = await fetchRewardDelay(client)
   return {
     accountRoot,
     ledger,
@@ -34,8 +36,8 @@ const fetch = async (account: string) => {
   }
 }
 
-export const ClaimReward = ({ account, onTransaction }: Props) => {
-  const { data: _data, mutate } = useSWRImmutable(account, fetch)
+export const ClaimReward = ({ client, account, onTransaction }: Props) => {
+  const { data: _data, mutate } = useSWRImmutable({ client, account }, fetch)
   const [data, setData] = useState(_data)
 
   useEffect(() => setData(_data), [_data])

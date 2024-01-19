@@ -2,13 +2,29 @@
 import useXumm from '@tequ/use-xumm-hook'
 import { Button, CircularProgress } from '@nextui-org/react'
 import { ClaimReward } from './ClaimReward'
-import config from '@/config'
+import { defaultConfig, configs } from '@/config'
 import { Client } from '@transia/xrpl'
+import { useEffect, useState } from 'react'
 
 export default function Home() {
   const { status, connect, disconnect, user, signTransaction, xumm } = useXumm(
     process.env.NEXT_PUBLIC_XUMM_APIKEY!, process.env.XUMM_SECRET!
   )
+  const [config, setConfig] = useState(defaultConfig)
+  const [client,setClient] = useState(new Client(config['wss']))
+
+  useEffect(() => {
+    const handler = (data: { network?: string }) => {
+      if (data.network?.toLowerCase().includes('test')) {
+        setConfig(configs['xahau-testnet'])
+        setClient(new Client(configs['xahau-testnet']['wss']))
+      }
+    }
+    xumm.xapp?.on('networkswitch', handler)
+    return () => {
+      xumm.xapp?.off('networkswitch', handler)
+    }
+  },[xumm.xapp])
 
   const handleClaimReward = async () => {
     try {
@@ -63,7 +79,7 @@ export default function Home() {
             <div className="text-lg">{user.account.substring(0, 15)}...</div>
             <Button className='' color="success" onClick={disconnect}>Disconnect</Button>
           </div>
-          <ClaimReward account={user.account} onTransaction={handleClaimReward} />
+          <ClaimReward client={client} account={user.account} onTransaction={handleClaimReward} />
         </>
       }
     </main>

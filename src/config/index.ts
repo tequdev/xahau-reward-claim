@@ -1,4 +1,4 @@
-const configs = {
+export const configs = {
   'xahau-mainnet': {
     'xaman-network': 'xahau',
     wss: 'wss://xahau.org',
@@ -11,6 +11,6 @@ const configs = {
   }
 }
 
-const config = configs[process.env.NEXT_PUBLIC_NETWORK as keyof typeof configs || 'xahau-testnet']
+export const defaultConfig = configs[process.env.NEXT_PUBLIC_NETWORK as keyof typeof configs || 'xahau-testnet']
 
-export default config
+defaultConfig
